@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Wardrobe.Core.Interfaces;
+using Wardrobe.Core.Services;
 using Wardrobe.Data.Contexts;
+using Wardrobe.Data.Interfaces;
+using Wardrobe.Data.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +20,10 @@ builder.Services.AddDbContext<WardrobeContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("WardrobeDB"))
 );
 
-//builder.Services.AddTransient<IReviewService, ReviewService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ICategoryRepo, CategoryRepo>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepo, UserRepo>();
 
 builder.Services.AddSwaggerGen();
 
