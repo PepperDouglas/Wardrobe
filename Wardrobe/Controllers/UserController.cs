@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wardrobe.Core.Interfaces;
 using Wardrobe.Helpers;
@@ -7,37 +8,45 @@ using Wardrobe.Models.Entities;
 
 namespace Wardrobe.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
-    {
+    [Authorize]
+    public class UserController : ControllerBase {
         private readonly IUserService _userService;
 
         public UserController(IUserService userService) {
             _userService = userService;
         }
 
-        [HttpGet("login")]
+        [HttpGet]
+        [Route("api/login")]
+        [AllowAnonymous]
         public async Task<IActionResult> UserLogin(UserCredentials credentials) {
             try {
                 var result = await _userService.Login(credentials);
                 if (result.Success == false) {
                     return BadRequest(result.Message);
                 }
-                return Ok("Logged in");
+                return Ok(new
+                {
+                    Token = result.Message
+                }); ;
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("logout")]
+        [HttpGet]
+        [Route("api/logout")]
+        [AllowAnonymous]
         public async Task<IActionResult> UserLogout() {
             _userService.Logout();
             return Ok("Logged out");
         }
 
-        [HttpGet("name/{name}")]
+        [HttpGet]
+        [Route("api/username/{name}")]
         public async Task<IActionResult> GetUserByName(string name) {
             try {
                 var user = await _userService.ReadUserByName(name);
@@ -51,7 +60,8 @@ namespace Wardrobe.Controllers
             }
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet]
+        [Route("api/userid/{id}")]
         public async Task<IActionResult> GetUserById(int id) {
             try {
                 var user = await _userService.ReadUserById(id);
@@ -66,6 +76,7 @@ namespace Wardrobe.Controllers
         }
 
         [HttpPost]
+        [Route("api/create-user")]
         public async Task<IActionResult> CreateUser(User user) {
             try {
                 await _userService.CreateUser(user);
@@ -77,6 +88,7 @@ namespace Wardrobe.Controllers
         }
 
         [HttpPut]
+        [Route("api/update-user")]
         public async Task<IActionResult> UpdateUser(User user) {
             try {
                 var result = await _userService.UpdateUser(user);
@@ -91,6 +103,7 @@ namespace Wardrobe.Controllers
         }
 
         [HttpDelete]
+        [Route("api/remove-user")]
         public async Task<IActionResult> DeleteUser(User user) {
             try {
                 var result = await _userService.DeleteUser(user);

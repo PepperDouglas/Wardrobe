@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 using Wardrobe.Core.Interfaces;
 using Wardrobe.Core.Services;
@@ -17,6 +21,29 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = jwtSettings["Key"];
+
+builder.Services.AddAuthentication(opt => {
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+.AddJwtBearer(opt => {
+     opt.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         ValidIssuer = jwtSettings["Issuer"],
+         ValidAudience = jwtSettings["Audience"],
+         IssuerSigningKey =
+          new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+         //Här sätts krypertingen upp med en nyckel som inte skall ligga direkt här
+     };
+ });
 
 builder.Services.AddDbContext<WardrobeContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("WardrobeDB"))
@@ -36,6 +63,8 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.UseSwagger();

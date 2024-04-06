@@ -36,6 +36,7 @@ namespace Wardrobe.Data.Repos
 
         public async Task<User> ReadUserById(int id) {
             return await _context.Users.Include(u => u.Orders)
+                .ThenInclude(o => o.ProductOrders)
                 .SingleOrDefaultAsync(u => u.UserId == id);
         }
 

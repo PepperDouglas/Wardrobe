@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Wardrobe.Core.Interfaces;
 using Wardrobe.Data.Interfaces;
 using Wardrobe.Helpers;
@@ -66,8 +70,28 @@ namespace Wardrobe.Core.Services
                 return flag;
             }
             if (user.Password == credentials.Password) {
+                //from demo
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+
+                //Generate JWToken, secret, creds, toptions
+                //Kod bör hanteras med ex Azure keyvault
+                var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mysecretKey12345!#123456789101112"));
+                var signInCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+                var tokenOptions = new JwtSecurityToken(
+                    issuer: "http://localhost:5185/",
+                    audience: "http://localhost:5185/",
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(20),
+                    signingCredentials: signInCredentials
+
+                );
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+                //end of demo
                 flag.Success = true;
-                flag.Message = "You have logged in";
+                flag.Message = tokenString;
                 UserLogger.IsLogged = true;
                 UserLogger.UserId = user.UserId;
                 return flag;
