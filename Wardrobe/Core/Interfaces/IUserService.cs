@@ -1,4 +1,5 @@
 ﻿using Wardrobe.Helpers;
+using Wardrobe.Models.DTO;
 using Wardrobe.Models.Entities;
 
 namespace Wardrobe.Core.Interfaces
@@ -7,12 +8,15 @@ namespace Wardrobe.Core.Interfaces
     {
         Task CreateUser(User user);
 
-        Task<User> ReadUserByName(string username);
+        Task<UserDTO> ReadUserByName(string username);
 
-        Task<User> ReadUserById(int id);
+        Task<UserDTO> ReadUserById(int id);
 
         Task<ResultFlag> UpdateUser(User user);
 
         Task<ResultFlag> DeleteUser(User user);
+        void Logout();
+
+        Task<ResultFlag> Login(UserCredentials credentials);
     }
 }

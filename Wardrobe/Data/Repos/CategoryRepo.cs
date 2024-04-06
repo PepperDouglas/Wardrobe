@@ -26,6 +26,7 @@ namespace Wardrobe.Data.Repos
             return _context.Categories.SingleOrDefault(c => c.CategoryId == id);
         }
 
+        
         public async Task<bool> CategoryExists(string name) {
             return _context.Categories.Any(c => EF.Functions.Like(c.Categoryname.ToLower(), name.ToLower()));
         }

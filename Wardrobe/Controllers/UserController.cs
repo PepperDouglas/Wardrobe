@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wardrobe.Core.Interfaces;
+using Wardrobe.Helpers;
+using Wardrobe.Models.DTO;
 using Wardrobe.Models.Entities;
 
 namespace Wardrobe.Controllers
@@ -13,6 +15,26 @@ namespace Wardrobe.Controllers
 
         public UserController(IUserService userService) {
             _userService = userService;
+        }
+
+        [HttpGet("login")]
+        public async Task<IActionResult> UserLogin(UserCredentials credentials) {
+            try {
+                var result = await _userService.Login(credentials);
+                if (result.Success == false) {
+                    return BadRequest(result.Message);
+                }
+                return Ok("Logged in");
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> UserLogout() {
+            _userService.Logout();
+            return Ok("Logged out");
         }
 
         [HttpGet("name/{name}")]

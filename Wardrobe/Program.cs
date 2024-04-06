@@ -9,6 +9,8 @@ using Wardrobe.Data.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddControllers()
     .AddJsonOptions(options => {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
@@ -26,6 +28,8 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepo, UserRepo>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepo, ProductRepo>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderRepo, OrderRepo>();
 
 builder.Services.AddSwaggerGen();
 

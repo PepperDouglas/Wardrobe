@@ -1,4 +1,5 @@
-﻿using Wardrobe.Core.Interfaces;
+﻿using AutoMapper;
+using Wardrobe.Core.Interfaces;
 using Wardrobe.Data.Interfaces;
 using Wardrobe.Helpers;
 using Wardrobe.Models.DTO;
@@ -9,15 +10,29 @@ namespace Wardrobe.Core.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepo _productRepo;
+        private readonly ICategoryRepo _categoryRepo;
+        private readonly IMapper _mapper;
 
-        public ProductService(IProductRepo productRepo) {
+        public ProductService(IProductRepo productRepo, ICategoryRepo categoryRepo, IMapper mapper) {
             _productRepo = productRepo;
+            _categoryRepo = categoryRepo;
+            _mapper = mapper;
         }
 
         public async Task<ResultFlag> AddProduct(ProductDTO product) {
             //remake to a real product here
             ResultFlag flag = new ResultFlag(false, "Could not add product");
-            var result = await _productRepo.AddProduct(product);
+            //get the category bool
+            var catExists = await _categoryRepo.GetCategoryByName(product.Category);
+            if (catExists == null) {
+                flag.Message = "Category does not exist";
+                return flag;
+            }
+            //map that bouy
+            var domainProduct = _mapper.Map<Product>(product);
+            //also manual mapping
+            domainProduct.CategoryId = catExists.CategoryId;
+            var result = await _productRepo.AddProduct(domainProduct);
             if (result) {
                 flag.Success = true;
                 flag.Message = "Product added successfully!";
@@ -52,7 +67,18 @@ namespace Wardrobe.Core.Services
             //get old product here and remap with new data
 
             ResultFlag flag = new ResultFlag(false, "Update failed");
-            var result = await _productRepo.UpdateProduct(product);
+            //get categpry valid??
+            var catExists = await _categoryRepo.GetCategoryByName(product.Category);
+            if (catExists == null) {
+                flag.Message = "Category does not exist";
+                return flag;
+            }
+            //map that bouy
+            var domainProduct = _mapper.Map<Product>(product);
+            //also manual mapping
+            domainProduct.CategoryId = catExists.CategoryId;
+            //manual foshizzlöe
+            var result = await _productRepo.UpdateProduct(domainProduct);
             if (result) {
                 flag.Success = true;
                 flag.Message = "Update successful";

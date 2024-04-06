@@ -13,5 +13,7 @@ namespace Wardrobe.Data.Interfaces
         Task<bool> UpdateUser(User user);
 
         Task<bool> DeleteUser(User user);
+
+        Task<List<Order>> GetUserOrders(int userId);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Wardrobe.Models.DTO
 {
-    public class UserOutDTO
+    public class UserDTO
     {
         public string Name { get; set; }
         public ICollection<Order> Orders { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Wardrobe.Data.Contexts;
 using Wardrobe.Data.Interfaces;
 using Wardrobe.Models.Entities;
@@ -28,12 +29,19 @@ namespace Wardrobe.Data.Repos
             return false;
         }
 
+        public async Task<List<Order>> GetUserOrders(int userId) {
+            var orders = new List<Order>();
+            return orders;
+        }
+
         public async Task<User> ReadUserById(int id) {
-            return await _context.Users.SingleOrDefaultAsync(u => u.UserId == id);
+            return await _context.Users.Include(u => u.Orders)
+                .SingleOrDefaultAsync(u => u.UserId == id);
         }
 
         public async Task<User> ReadUserByName(string username) {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+            return await _context.Users.Include(u => u.Orders)
+                .SingleOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task<bool> UpdateUser(User user) {
