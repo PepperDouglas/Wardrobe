@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wardrobe.Core.Interfaces;
 using Wardrobe.Models.DTO;
 
 namespace Wardrobe.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -15,7 +17,8 @@ namespace Wardrobe.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet]
+        [Route("api/order-id/{id}")]
         public async Task<IActionResult> GetOrder(int id) {
             try {
                 var order = await _orderService.GetOrder(id);
@@ -30,7 +33,8 @@ namespace Wardrobe.Controllers
         }
 
         //order should not be deleteable unless user is admin
-        [HttpDelete("id/{id}")]
+        [HttpDelete]
+        [Route("api/remove-order/{id}")]
         public async Task<IActionResult> DeleteOrder(int id) {
             try {
                 var result = await _orderService.DeleteOrder(id);
@@ -45,6 +49,7 @@ namespace Wardrobe.Controllers
         }
 
         [HttpPost]
+        [Route("api/create-order")]
         public async Task<IActionResult> CreateOrder(List<ProductOrderDTO> productOrdersDTO) {
             try {
                 //var productOrders = productOrdersDTO.Select(po => (po.ProductId, po.Quantity)).ToList();

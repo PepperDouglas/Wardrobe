@@ -63,6 +63,9 @@ namespace Wardrobe.Controllers
         [HttpGet]
         [Route("api/userid/{id}")]
         public async Task<IActionResult> GetUserById(int id) {
+            if (UserLogger.UserId != id) {
+                return BadRequest("Not authorized");
+            }
             try {
                 var user = await _userService.ReadUserById(id);
                 if (user == null) {
@@ -77,6 +80,7 @@ namespace Wardrobe.Controllers
 
         [HttpPost]
         [Route("api/create-user")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser(User user) {
             try {
                 await _userService.CreateUser(user);
@@ -90,6 +94,9 @@ namespace Wardrobe.Controllers
         [HttpPut]
         [Route("api/update-user")]
         public async Task<IActionResult> UpdateUser(User user) {
+            if (UserLogger.UserId != user.UserId) {
+                return BadRequest("Not authorized");
+            }
             try {
                 var result = await _userService.UpdateUser(user);
                 if (result.Success) {
@@ -105,6 +112,9 @@ namespace Wardrobe.Controllers
         [HttpDelete]
         [Route("api/remove-user")]
         public async Task<IActionResult> DeleteUser(User user) {
+            if (UserLogger.UserId != user.UserId) {
+                return BadRequest("Not authorized");
+            }
             try {
                 var result = await _userService.DeleteUser(user);
                 if (result.Success) {

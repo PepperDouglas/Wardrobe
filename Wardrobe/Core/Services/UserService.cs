@@ -36,13 +36,16 @@ namespace Wardrobe.Core.Services
         }
 
         public async Task<UserDTO> ReadUserById(int id) {
-            var domainuser = await _userRepo.ReadUserById(id);
+            var domainuser = await _userRepo.ReadUserById(id) ?? throw new Exception("No such user");
             var persondto = _mapper.Map<UserDTO>(domainuser);
             return persondto;
         }
 
         public async Task<UserDTO> ReadUserByName(string username) {
-            var domainuser = await _userRepo.ReadUserByName(username);
+            var domainuser = await _userRepo.ReadUserByName(username) ?? throw new Exception("No such user");
+            if (domainuser.UserId != UserLogger.UserId) {
+                throw new Exception("Not authorized");
+            }
             var persondto = _mapper.Map<UserDTO>(domainuser);
             return persondto;
         }

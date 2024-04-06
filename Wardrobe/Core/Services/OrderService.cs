@@ -56,6 +56,10 @@ namespace Wardrobe.Core.Services
 
         public async Task<ResultFlag> DeleteOrder(int orderId) {
             ResultFlag flag = new ResultFlag(false, "Something went wrong");
+            var order = await GetOrder(orderId);
+            if (order.UserId != UserLogger.UserId) {
+                throw new Exception("Not your order");
+            }
             var result = await _orderRepo.DeleteOrder(orderId);
             if (result) {
                 flag.Success = true;
@@ -66,7 +70,17 @@ namespace Wardrobe.Core.Services
         }
 
         public async Task<Order> GetOrder(int orderId) {
-            return await _orderRepo.GetOrder(orderId);
+            var order =  await _orderRepo.GetOrder(orderId);
+            if (order == null) {
+                throw new Exception("No such order");
+            }
+            if (!UserLogger.IsLogged) {
+                throw new Exception("Please log in");
+            }
+            if (order.UserId != UserLogger.UserId) {
+                throw new Exception("Not your order");
+            }
+            return order;
         }
 
     }
