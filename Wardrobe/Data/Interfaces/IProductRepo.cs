@@ -9,7 +9,6 @@ namespace Wardrobe.Data.Interfaces
         Task<bool> RemoveProduct(Product product);
 
         Task<bool> UpdateProduct(Product product);
-        //For this case we have the product DTO, where we include the update id
 
         Task<Product> GetProductById(int id);
 

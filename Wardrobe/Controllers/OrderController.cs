@@ -6,7 +6,6 @@ using Wardrobe.Models.DTO;
 
 namespace Wardrobe.Controllers
 {
-    //[Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class OrderController : ControllerBase
@@ -32,7 +31,6 @@ namespace Wardrobe.Controllers
             }
         }
 
-        //order should not be deleteable unless user is admin
         [HttpDelete]
         [Route("api/remove-order/{id}")]
         public async Task<IActionResult> DeleteOrder(int id) {
@@ -52,7 +50,6 @@ namespace Wardrobe.Controllers
         [Route("api/create-order")]
         public async Task<IActionResult> CreateOrder(List<ProductOrderDTO> productOrdersDTO) {
             try {
-                //var productOrders = productOrdersDTO.Select(po => (po.ProductId, po.Quantity)).ToList();
                 var result = await _orderService.CreateOrder(productOrdersDTO);
                 if (!result.Success) { 
                     return BadRequest(result.Message);

@@ -8,7 +8,6 @@ using Wardrobe.Models.Entities;
 
 namespace Wardrobe.Controllers
 {
-    //[Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase {
@@ -126,23 +125,5 @@ namespace Wardrobe.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
-
-        /*
-         Task CreateUser(User user);
-
-        Task<User> ReadUserByName(string username);
-
-        Task<User> ReadUserById(int id);
-
-        Task<ResultFlag> UpdateUser(User user);
-
-        Task<ResultFlag> DeleteUser(User user);
-         
-         
-         
-         
-         */
     }
 }

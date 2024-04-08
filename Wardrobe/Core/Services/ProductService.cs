@@ -20,7 +20,6 @@ namespace Wardrobe.Core.Services
         }
 
         public async Task<ResultFlag> AddProduct(ProductDTO product) {
-            //remake to a real product here
             ResultFlag flag = new ResultFlag(false, "Could not add product");
             //get the category bool
             var catExists = await _categoryRepo.GetCategoryByName(product.Category);
@@ -28,7 +27,7 @@ namespace Wardrobe.Core.Services
                 flag.Message = "Category does not exist";
                 return flag;
             }
-            //map that bouy
+            //map
             var domainProduct = _mapper.Map<Product>(product);
             //also manual mapping
             domainProduct.CategoryId = catExists.CategoryId;
@@ -64,20 +63,17 @@ namespace Wardrobe.Core.Services
         }
 
         public async Task<ResultFlag> UpdateProduct(ProductDTO product) {
-            //get old product here and remap with new data
-
             ResultFlag flag = new ResultFlag(false, "Update failed");
-            //get categpry valid??
+            //get category valid
             var catExists = await _categoryRepo.GetCategoryByName(product.Category);
             if (catExists == null) {
                 flag.Message = "Category does not exist";
                 return flag;
             }
-            //map that bouy
+            //map that
             var domainProduct = _mapper.Map<Product>(product);
             //also manual mapping
             domainProduct.CategoryId = catExists.CategoryId;
-            //manual foshizzlöe
             var result = await _productRepo.UpdateProduct(domainProduct);
             if (result) {
                 flag.Success = true;

@@ -31,7 +31,6 @@ namespace Wardrobe.Core.Services
             if (!result) {
                 return flag;
             }
-            //quantity, price, orderid, productid
             //create productorders
             foreach (var item in productOrders) {
                 var product = await _productRepo.GetProductById(item.ProductId);

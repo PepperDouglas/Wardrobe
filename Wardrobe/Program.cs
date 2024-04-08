@@ -41,7 +41,6 @@ builder.Services.AddAuthentication(opt => {
          ValidAudience = jwtSettings["Audience"],
          IssuerSigningKey =
           new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-         //Här sätts krypertingen upp med en nyckel som inte skall ligga direkt här
      };
  });
 

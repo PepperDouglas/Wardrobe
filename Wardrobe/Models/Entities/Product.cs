@@ -17,7 +17,6 @@ namespace Wardrobe.Models.Entities
         [StringLength(300)]
         public string Description { get; set; }
         public double Price { get; set; }
-        //Conn
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }

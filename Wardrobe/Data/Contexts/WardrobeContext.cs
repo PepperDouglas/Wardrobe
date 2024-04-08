@@ -15,15 +15,5 @@ namespace Wardrobe.Data.Contexts
         public virtual DbSet<ProductOrder> ProductOrders { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        //    base.OnModelCreating(modelBuilder);
-
-
-        //    modelBuilder.Entity<Category>()
-        //        .HasOne(r => r.Product)
-        //        .WithMany(u => u.Recipes)
-        //        .HasForeignKey(r => r.UserID)
-        //        .OnDelete(DeleteBehavior.NoAction);
-        //}
     }
 }

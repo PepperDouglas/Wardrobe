@@ -44,7 +44,6 @@ namespace Wardrobe.Data.Repos
             var products = await _context.Products.Where(p => p.Productname.Contains(term)).ToListAsync();
             
              return products;
-             //check if count != 0 in the service layer
             
         }
 

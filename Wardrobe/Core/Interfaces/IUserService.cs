@@ -16,7 +16,6 @@ namespace Wardrobe.Core.Interfaces
 
         Task<ResultFlag> DeleteUser(User user);
         void Logout();
-
         Task<ResultFlag> Login(UserCredentials credentials);
     }
 }

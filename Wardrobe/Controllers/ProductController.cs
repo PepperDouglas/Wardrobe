@@ -34,7 +34,6 @@ namespace Wardrobe.Controllers
                 var products = await _productService.SearchProducts(parameter);
                 
                 return Ok(products);
-                //An empty list is OK
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -68,18 +67,5 @@ namespace Wardrobe.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
-        /*
-        [HttpGet]
-        public async Task<IActionResult> GetAllProducts() {
-            try {
-                var result = await _productService.
-            }
-            catch (Exception ex) {
-                return BadRequest(ex.Message);
-            }
-        }
-        */
-
     }
 }

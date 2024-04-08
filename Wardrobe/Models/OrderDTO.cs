@@ -8,6 +8,5 @@ namespace Wardrobe.Models
         public int OrderId { get; set; }
         public int UserId { get; set; }
         public ICollection<ProductOrderDTO>? ProductOrders { get; set; }
-        // Depending on your design, you might want a ProductOrderDTO instead
     }
 }
